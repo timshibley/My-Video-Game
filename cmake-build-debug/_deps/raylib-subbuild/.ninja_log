@@ -1,0 +1,21 @@
+# ninja log v6
+3	88	7586736945185500	raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-mkdir	c630d8122c61ebd6
+3	88	7586736945185500	C:/Users/shibl/CLionProjects/FirstGame/cmake-build-debug/_deps/raylib-subbuild/raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-mkdir	c630d8122c61ebd6
+6348	6455	7586737008884086	C:/Users/shibl/CLionProjects/FirstGame/cmake-build-debug/_deps/raylib-subbuild/CMakeFiles/raylib-populate-complete	cbb201b2b83ec498
+5994	6058	7586737004914454	C:/Users/shibl/CLionProjects/FirstGame/cmake-build-debug/_deps/raylib-subbuild/raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-patch	8a8f90f6cff7da52
+89	5914	7586737003441367	raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-download	e66d491955c8d518
+6281	6348	7586737007809679	raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-test	30977f65dd13468b
+89	5914	7586737003441367	C:/Users/shibl/CLionProjects/FirstGame/cmake-build-debug/_deps/raylib-subbuild/raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-download	e66d491955c8d518
+5915	5993	7586737004268464	raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-update	97cb57dc2642c16e
+5994	6058	7586737004914454	raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-patch	8a8f90f6cff7da52
+5915	5993	7586737004268464	C:/Users/shibl/CLionProjects/FirstGame/cmake-build-debug/_deps/raylib-subbuild/raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-update	97cb57dc2642c16e
+6058	6141	7586737005735763	raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-configure	b5453bf447220c9a
+6058	6141	7586737005735763	C:/Users/shibl/CLionProjects/FirstGame/cmake-build-debug/_deps/raylib-subbuild/raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-configure	b5453bf447220c9a
+6141	6212	7586737006449853	C:/Users/shibl/CLionProjects/FirstGame/cmake-build-debug/_deps/raylib-subbuild/raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-build	29502c73c22673bb
+6141	6212	7586737006449853	raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-build	29502c73c22673bb
+6281	6348	7586737007809679	C:/Users/shibl/CLionProjects/FirstGame/cmake-build-debug/_deps/raylib-subbuild/raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-test	30977f65dd13468b
+6212	6281	7586737007137700	raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-install	e0f5c2c3d766692e
+6212	6281	7586737007137700	C:/Users/shibl/CLionProjects/FirstGame/cmake-build-debug/_deps/raylib-subbuild/raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-install	e0f5c2c3d766692e
+6348	6455	7586737008884086	CMakeFiles/raylib-populate-complete	cbb201b2b83ec498
+6348	6455	7586737008884086	raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-done	cbb201b2b83ec498
+6348	6455	7586737008884086	C:/Users/shibl/CLionProjects/FirstGame/cmake-build-debug/_deps/raylib-subbuild/raylib-populate-prefix/src/raylib-populate-stamp/raylib-populate-done	cbb201b2b83ec498
