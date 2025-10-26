@@ -15,6 +15,6 @@ ninja: no work to do.
 -- Compiling with the flags:
 --   PLATFORM=PLATFORM_DESKTOP
 --   GRAPHICS=GRAPHICS_API_OPENGL_33
--- Configuring done (0.8s)
+-- Configuring done (0.7s)
 -- Generating done (0.2s)
 -- Build files have been written to: C:/Users/shibl/CLionProjects/FirstGame/cmake-build-debug

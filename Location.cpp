@@ -20,6 +20,11 @@ Location::Location(Entity *e, Rectangle r) {
     entity = e;
     rectangle = r;
 }
+Location::Location(Entity *e) {
+    entity = e;
+    rectangle = {0,0,0,0};
+    color = WHITE;
+}
 
 
 bool Location::isEqual(Location loc) {
@@ -39,10 +44,10 @@ bool Location::isEdge() {
     }
     return false;
 }
-
+/*
 void Location::draw(int x, int y) {
     DrawRectangle(x * 100, y * 100, rectangle.width, rectangle.height, color);
-}
+}*/
 
 void Location::setColor(Color c) {
     color = c;

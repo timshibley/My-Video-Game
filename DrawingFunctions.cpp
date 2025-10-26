@@ -15,11 +15,11 @@ void checkDrawing() {
     for (float i = 0; i < visibleGridLocations.size(); i++) {
         for (float j = 0; j < visibleGridLocations[i].size(); j++) {
 
-            DrawRectangleRec({j*100+topLeftCornerXPos, i*100+topLeftCornerYpos, visibleGridLocations[i][j]->rectangle.width, visibleGridLocations[i][j]->rectangle.height}, visibleGridLocations[i][j]->color);
+            DrawRectangleRec({j*(int)(visibleGridLocations[i][j]->rectangle.width)+topLeftCornerXPos, i*(int)(visibleGridLocations[i][j]->rectangle.height)+topLeftCornerYpos, visibleGridLocations[i][j]->rectangle.width, visibleGridLocations[i][j]->rectangle.height}, visibleGridLocations[i][j]->color);
 
             if (visibleGridLocations[i][j]->entity != nullptr) {
                 if (visibleGridLocations[i][j]->entity->isVisible()) {
-                    DrawTexture(visibleGridLocations[i][j]->entity->getTexture(), j*100+topLeftCornerXPos, i*100+topLeftCornerYpos, WHITE );
+                    DrawTexture(visibleGridLocations[i][j]->entity->getTexture(), j*(int)(visibleGridLocations[i][j]->rectangle.width)+topLeftCornerXPos, i*(int)(visibleGridLocations[i][j]->rectangle.height)+topLeftCornerYpos, WHITE );
                 }
             }
         }
@@ -57,7 +57,7 @@ void drawFireAttack() {
         default:
             break;
     }
-    DrawTexture(playerAttackTextures[currentFireAttackFrame], visibleGridLocations[playerY][playerX]->rectangle.x, visibleGridLocations[playerY][playerX]->rectangle.y,WHITE);
+    DrawTexture(playerAttackTextures[currentFireAttackFrame],playerX*visibleGridLocations[playerY][playerX]->rectangle.width+topLeftCornerXPos, playerY*visibleGridLocations[playerY][playerX]->rectangle.width+topLeftCornerYpos,WHITE);
     if (GetTime()-attackStartTime > 1) {
         Enemy* temp = player.adjacentEnemy(player.getLookingDirection());
         if (temp != nullptr) {

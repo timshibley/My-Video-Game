@@ -185,14 +185,15 @@ void checkBotAI() {
 
 
 int convertXPosToGrid(Location* pos) {
-    return pos->rectangle.x/100;
+    return pos->rectangle.x/standardWidth;
 }
 
 int convertYPosToGrid(Location* pos) {
-    return pos->rectangle.y/100;
+    return pos->rectangle.y/standardHeight;
 }
 
 void upkeepEntitiesOnVisibleGrid() {
+    /*
     EntityNode* e = entityManager->head;
     while (e != nullptr) {
         e->entry->setVisibleCoordinates();
@@ -202,6 +203,13 @@ void upkeepEntitiesOnVisibleGrid() {
         }
         else {
             e = e->next;
+        }
+    }*/
+    for (int i =0; i < visibleGridLocations.size(); i++) {
+        for (int j = 0; j < visibleGridLocations[i].size(); j++) {
+            if (visibleGridLocations[i][j]->entity != nullptr) {
+                visibleGridLocations[i][j]->entity->setVisibleCoordinates(j, i);
+            }
         }
     }
 }

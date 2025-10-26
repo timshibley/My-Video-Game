@@ -9,8 +9,8 @@
 
 class Enemy : public Entity {
 
-    int healthPoints;
-    int maxHealthPoints;
+    int healthPoints{}; //I may want to change this to being called currentHealthPoints for a more descriptive name.
+    int maxHealthPoints{};
 public:
     Enemy(float x, float y, float width, float height, int i, int v, Color c, Texture2D t, int k, int xGrid, int yGrid, int hp);
     Enemy();

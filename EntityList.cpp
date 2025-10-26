@@ -222,6 +222,10 @@ EntityNode* EntityList::findNthEntry(int chosenID, int n) {
     return temp; //will return nullptr if there are fewer entries than n
 }
 
+
+/*  The purpose of this function is to find what entity is located at y,x of the whole grid.
+ *  This looks at not just the visible grid.
+ */
 Entity* EntityList::findAtUltimateXY(int x, int y) {
     EntityNode* temp = head;
   //  bool done = false;

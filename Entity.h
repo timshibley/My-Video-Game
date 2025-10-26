@@ -13,14 +13,14 @@ class Enemy;
 class Entity {
 private:
     int id;
-    Texture2D texture;
-    Color color;
-    bool visible;
-    int xGridCord, yGridCord;//These are in terms of all grid blocks
-    int xVisibleCord, yVisibleCord;
+    Texture2D texture{};
+    Color color{};
+    bool visible{};
+    int xGridCord{}, yGridCord{};//These are in terms of all grid blocks
+    int xVisibleCord{}, yVisibleCord{}; //These are the entity's coordinates of the visible grid.
 public:
-    int textureTracker;
-    Rectangle rectangle;
+    int textureTracker{};
+    Rectangle rectangle{};
     virtual ~Entity()= default;
     Entity();
     Entity(float x, float y, float width, float height, int i, int v, Color c, Texture2D t, int k, int xGrid, int yGrid);
@@ -41,7 +41,7 @@ public:
     int getYVisibleCoordinate();
     int getXGridCoordinate();
     int getYGridCoordinate();
-    void setVisibleCoordinates();
+    void setVisibleCoordinates(int tempX, int tempY);
     void setVisibility(bool v);
     void setColor(Color c);
     void setRectangle(Rectangle r);

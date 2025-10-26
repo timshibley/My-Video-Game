@@ -11,6 +11,9 @@
 
 #include "Location.h"
 #include "Menu.h"
+#include "Room.h"
+
+//This file contains all of my global variables.
 inline Vector2 startPosition;
 inline Vector2 startSize;
 inline int windowWidth;
@@ -18,9 +21,11 @@ inline int windowHeight;
 inline Player player;
 inline Color backgroundColor;
 inline int level;
+inline int standardHeight;
+inline int standardWidth;
+inline double visualScalingFactor;
 inline int turnTracker;
 inline EntityList* entityManager;
-inline Texture2D apple;
 inline float topLeftCornerXPos;
 inline float topLeftCornerYpos;
 namespace fs = std::filesystem;
@@ -28,11 +33,13 @@ inline std::string enemyFolderPath;
 inline std::string doorFolderPath;
 inline std::string playerFolderPath;
 inline std::string playerAttackFolderPath;
+inline std::string tileFolderPath;
 inline std::string menuFolderPath;
 inline std::vector<Texture2D> enemyTextures;
 inline std::vector<Texture2D> doorTextures;
 inline std::vector<Texture2D> playerTextures;
 inline std::vector<Texture2D> playerAttackTextures;
+inline std::vector<Texture2D> tileTextures;
 inline int walkLeftRightWallCount;
 inline int walkUpDownWallCount;
 inline std::vector<Texture2D> menuTextures;
@@ -44,4 +51,5 @@ inline double frameTime;
 inline double previousFrameTime;
 inline int attackTracker;
 inline Menu mainMenu;
+inline Room mainRoom;
 #endif //MAIN_H

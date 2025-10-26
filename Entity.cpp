@@ -1,4 +1,5 @@
-//
+// This is my base class for all entities.
+// Many of the classes in this program are subclasses of the Entity class.
 // Created by shibl on 1/15/2025.
 //
 
@@ -10,10 +11,14 @@
 #include "Macros.h"
 #include "main.h"
 
+
+//This is never used, but I have it written just in case I eventually want to use it.
 Entity::Entity() {
     id = 0;
     rectangle = {0, 0, 0, 0};
 }
+
+//This is the constructor I use throughout the program. I could definitely see myself creating more as I have more unique use cases.
 Entity::Entity(float x, float y, float width, float height, int i, int v, Color c, Texture2D t, int k, int xGrid, int yGrid) {
     id = i;
     color = c;
@@ -25,6 +30,7 @@ Entity::Entity(float x, float y, float width, float height, int i, int v, Color 
     yGridCord = yGrid;
 }
 
+//I may change a lot of these private variables into public variables, because the readability of the code is decreased due to the setters and getters.
 
 int Entity::getXGridCoordinate() {
     return xGridCord;
@@ -100,17 +106,18 @@ void Entity::setColor(Color c) {
 }
 
 int Entity::getXVisibleCoordinate() {
-    return rectangle.x;
+    return xVisibleCord;
 }
 
 int Entity::getYVisibleCoordinate() {
-    return rectangle.y;
+    return yVisibleCord;
 }
 
 
 
 
-
+//This function checks if there is a tile in the direction specified by the variable.
+//The purpose of the function is to prevent an Entity from taking an action that would result in a memory error
 bool Entity::isTileAdjacent(int direction) {
     bool decision = false;
     switch (direction) {
@@ -142,9 +149,12 @@ bool Entity::isTileAdjacent(int direction) {
 
 
 //Will return true if there is a wall. This is important for combat to not attack the walls.
+//Eventually this could allow for entities to attack many different types of ids with priorities on certain ids
+//This actually checks if there is an entity in a specific tile.
 bool Entity::isTileOccupied(int direction, int chosenID) {
     bool decision = false;
     if (isTileAdjacent(direction)) {
+        //This is the case if I am looking for a specific ID
         if (chosenID != DONT_CARE_ID) {
                 switch (direction) {
                     case UP:
@@ -170,8 +180,9 @@ bool Entity::isTileOccupied(int direction, int chosenID) {
                     default:
                         break;
                 }
-
         }
+
+        //This is the case if I am checking if a certain tile is empty.
         else {
             switch (direction) {
                 case UP:
@@ -206,6 +217,8 @@ bool Entity::isTileOccupied(int direction, int chosenID) {
     return decision;
 }
 
+
+//This returns a pointer to an entity at the chosen tile.
 Entity* Entity::adjacentEntity(int direction) {
     Entity* pointer = nullptr;
     if (isTileAdjacent(direction)) {
@@ -231,6 +244,9 @@ Entity* Entity::adjacentEntity(int direction) {
     return pointer;
 }
 
+
+//This returns the pointer of an adjacent enemy.
+//To do: rework this to be more general and allow the function to accept an ID to allow for more use cases.
 Enemy* Entity::adjacentEnemy(int direction) {
     if (isTileOccupied(direction, MONSTER_ID)) {
         switch (direction) {
@@ -256,11 +272,12 @@ Enemy* Entity::adjacentEnemy(int direction) {
     return nullptr;
 }
 
-
+//This moves the entity in a chosen direction.
+//I may want to incorporate the checking to make sure there is a tile in that direction in this function.
 void Entity::moveInDirection(int dir) {
     switch (dir) {
         case UP:
-            gridMap[yGridCord][xGridCord]->entity = nullptr;
+            gridMap[yGridCord][xGridCord]->entity = nullptr; //Makes sure to move the entity.
             yGridCord--;
             gridMap[yGridCord][xGridCord]->entity = this;
             break;
@@ -283,7 +300,14 @@ void Entity::moveInDirection(int dir) {
     }
 }
 
-void Entity::setVisibleCoordinates() {
+
+//This checks to see if the entity is within the visible grid.
+//There may be a more efficient way of doing this by using the visible grid and going tile by tile
+// and adjusting the entities values through that
+void Entity::setVisibleCoordinates(int tempX, int tempY) {
+    xVisibleCord = tempX;
+    yVisibleCord = tempY;
+    /*
     for (int i = 0; i < visibleGridLocations.size(); i++) {
         for (int j = 0; j < visibleGridLocations[i].size(); j++) {
             if (visibleGridLocations[i][j]->entity == this) {
@@ -294,25 +318,26 @@ void Entity::setVisibleCoordinates() {
         }
     }
     xVisibleCord = -1;
-    yVisibleCord = -1;
+    yVisibleCord = -1;*/
 }
 
+//These are the rectangles around the entity that are actually visible. This is used for collisions with the mouse etc.
 Rectangle Entity::ownedVisibleRectangle() {
-    return {xVisibleCord*100+topLeftCornerXPos, yVisibleCord*100+topLeftCornerYpos, 100, 100};
+    return {xVisibleCord*(int)(standardWidth*visualScalingFactor)+topLeftCornerXPos, yVisibleCord*(int)(standardHeight*visualScalingFactor)+topLeftCornerYpos, (float)standardWidth, (float)standardHeight};
 }
 
 Rectangle Entity::rightVisibleRectangle() {
-    return {(xVisibleCord+1)*100+topLeftCornerXPos, yVisibleCord*100+topLeftCornerYpos, 100, 100};
+    return {(xVisibleCord+1)*(int)(standardWidth*visualScalingFactor)+topLeftCornerXPos, yVisibleCord*(int)(standardHeight*visualScalingFactor)+topLeftCornerYpos, (float)standardWidth, (float)standardHeight};
 }
 
 Rectangle Entity::leftVisibleRectangle() {
-    return {(xVisibleCord-1)*100+topLeftCornerXPos, yVisibleCord*100+topLeftCornerYpos, 100, 100};
+    return {(xVisibleCord-1)*(int)(standardWidth*visualScalingFactor)+topLeftCornerXPos, yVisibleCord*(int)(standardHeight*visualScalingFactor)+topLeftCornerYpos, (float)standardWidth, (float)standardHeight};
 }
 
 Rectangle Entity::aboveVisibleRectangle() {
-    return {xVisibleCord*100+topLeftCornerXPos, (yVisibleCord-1)*100+topLeftCornerYpos, 100, 100};
+    return {xVisibleCord*(int)(standardWidth*visualScalingFactor)+topLeftCornerXPos, (yVisibleCord-1)*(int)(standardHeight*visualScalingFactor)+topLeftCornerYpos, (float)standardWidth, (float)standardHeight};
 }
 
 Rectangle Entity::belowVisibleRectangle() {
-    return {xVisibleCord*100+topLeftCornerXPos, (yVisibleCord+1)*100+topLeftCornerYpos, 100, 100};
+    return {xVisibleCord*(int)(standardWidth*visualScalingFactor)+topLeftCornerXPos, (yVisibleCord+1)*(int)(standardHeight*visualScalingFactor)+topLeftCornerYpos, (float)(standardWidth*visualScalingFactor), (float)(standardHeight*visualScalingFactor)};
 }

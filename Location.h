@@ -18,6 +18,7 @@ class Location {
     //Location();
     Location(Entity* e, Rectangle r, Color c);
     Location(Entity* e, Rectangle r);
+    Location(Entity* e);
     Location();
     bool isEqual(Location loc);
     bool isEdge();
