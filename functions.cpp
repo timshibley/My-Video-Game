@@ -10,7 +10,11 @@
 #include "Entity.h"
 #include <cmath>
 #include "raymath.h"
+
+//This checks all of the keys
 void checkKeys() {
+
+    //Changes direction being faced by player
     if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
         if (player.isTileAdjacent(UP) && CheckCollisionPointRec(GetMousePosition(), player.aboveVisibleRectangle())) {
             player.setLookingDirection(LOOKING_UP);
@@ -29,9 +33,11 @@ void checkKeys() {
             player.setTexture(playerTextures[MC_LEFT_TEXTURE]);
         }
     }
+
+    //Moves player up
     if (IsKeyPressed(KEY_W)){
-        if (player.isTileAdjacent(UP) && gridMap[player.getYGridCoordinate()-1][player.getXGridCoordinate()]->entity == nullptr) {
-            if (!visibleGridLocations[0][(visibleGridLocations[0].size()-1)/2]->isEdge() && walkUpDownWallCount == 0) {
+        if (player.isTileAdjacent(UP) && mainRoom.tiles[player.getYGridCoordinate()-1][player.getXGridCoordinate()]->location.entity == nullptr) {
+            if (!visibleTiles[0][(visibleTiles[0].size()-1)/2]->location.isEdge() && walkUpDownWallCount == 0) {
                 player.specialMoveScreen(UP);
             }
             else {
@@ -44,9 +50,10 @@ void checkKeys() {
         }
 
     }
+    //Moves player down
     if (IsKeyPressed(KEY_S)) {
-        if (player.isTileAdjacent(DOWN) && gridMap[player.getYGridCoordinate()+1][player.getXGridCoordinate()]->entity == nullptr ) {
-            if (!visibleGridLocations[visibleGridLocations.size()-1][(visibleGridLocations[0].size()-1)/2]->isEdge() && walkUpDownWallCount == 0) {
+        if (player.isTileAdjacent(DOWN) && mainRoom.tiles[player.getYGridCoordinate()+1][player.getXGridCoordinate()]->location.entity == nullptr ) {
+            if (!visibleTiles[visibleTiles.size()-1][(visibleTiles[0].size()-1)/2]->location.isEdge() && walkUpDownWallCount == 0) {
                 player.specialMoveScreen(DOWN);
             }
             else {
@@ -58,9 +65,11 @@ void checkKeys() {
             turnTracker = OPPONENTTURN;
         }
     }
+
+    //Moves player right
     if (IsKeyPressed(KEY_D)) {
-        if (player.isTileAdjacent(RIGHT) && gridMap[player.getYGridCoordinate()][player.getXGridCoordinate()+1]->entity == nullptr ) {
-            if (!visibleGridLocations[(visibleGridLocations.size()-1)/2][visibleGridLocations[0].size()-1]->isEdge() && walkLeftRightWallCount == 0) {
+        if (player.isTileAdjacent(RIGHT) && mainRoom.tiles[player.getYGridCoordinate()][player.getXGridCoordinate()+1]->location.entity == nullptr ) {
+            if (!visibleTiles[(visibleTiles.size()-1)/2][visibleTiles[0].size()-1]->location.isEdge() && walkLeftRightWallCount == 0) {
                 player.specialMoveScreen(RIGHT);
             }
             else {
@@ -72,9 +81,11 @@ void checkKeys() {
             turnTracker = OPPONENTTURN;
         }
     }
+
+    //Moves player left
     if (IsKeyPressed(KEY_A)) {
-        if (player.isTileAdjacent(LEFT)&& gridMap[player.getYGridCoordinate()][player.getXGridCoordinate()-1]->entity == nullptr ) {
-            if (!visibleGridLocations[(visibleGridLocations.size()-1)/2][0]->isEdge() && walkLeftRightWallCount == 0) {
+        if (player.isTileAdjacent(LEFT)&& mainRoom.tiles[player.getYGridCoordinate()][player.getXGridCoordinate()-1]->location.entity == nullptr ) {
+            if (!visibleTiles[(visibleTiles.size()-1)/2][0]->location.isEdge() && walkLeftRightWallCount == 0) {
                 player.specialMoveScreen(LEFT);
 
             }
@@ -87,6 +98,7 @@ void checkKeys() {
             turnTracker = OPPONENTTURN;
         }
     }
+    //Uses the fire attack
     if (IsKeyPressed(KEY_B)) {
         if (player.isTileAdjacent(player.getLookingDirection())) {
             if (player.isTileOccupied(player.getLookingDirection(), MONSTER_ID)) {
@@ -99,12 +111,15 @@ void checkKeys() {
             }
         }
     }
+    //Displays/Hides the menu
     if (IsKeyPressed(KEY_E)) {
         mainMenu.setVisibility(!mainMenu.getVisibility());
     }
 
 }
 
+
+//Checks the collisions between entities.
 void checkCollisions() {
     EntityNode* nodeWalker = entityManager->findIDTree(DOOR_ID);
     if (nodeWalker->entry->isVisible() == VISIBLE && CheckCollisionRecs(player.rectangle, *nodeWalker->entry->getRectangle())) {
@@ -114,36 +129,41 @@ void checkCollisions() {
     nodeWalker = entityManager->findIDTree(MONSTER_ID);
     while (nodeWalker != nullptr) {
         if (nodeWalker->entry->isVisible() == VISIBLE && CheckCollisionRecs(player.rectangle, *nodeWalker->entry->getRectangle())) {
-            gridMap[nodeWalker->entry->getYGridCoordinate()][nodeWalker->entry->getXGridCoordinate()]->entity = nullptr;
+            mainRoom.tiles[nodeWalker->entry->getYGridCoordinate()][nodeWalker->entry->getXGridCoordinate()]->location.entity = nullptr;
             entityManager->deleteNthID(MONSTER_ID, nodeWalker->level);
         }
         nodeWalker = nodeWalker->next;
     }
 }
 
+
+//This runs the entity AIs
 void checkBotAI() {
     EntityNode* monster = entityManager->findIDTree(MONSTER_ID);
     while (monster != nullptr) {
+
         if (monster->entry->isVisible() == VISIBLE) {
+            //Moves towards the player if they are less than 4 tiles away from them.
              if (abs(player.getXGridCoordinate() - monster->entry->getXGridCoordinate()) <= 3 && abs(player.getYGridCoordinate() - monster->entry->getYGridCoordinate()) <= 3) {
                 if (abs(player.getXGridCoordinate() - monster->entry->getXGridCoordinate()) > abs(player.getYGridCoordinate() - monster->entry->getYGridCoordinate())) {
-                    if (player.getXGridCoordinate() > monster->entry->getXGridCoordinate() && gridMap[monster->entry->getYGridCoordinate()][monster->entry->getXGridCoordinate()+1]->entity == nullptr) {
+                    if (player.getXGridCoordinate() > monster->entry->getXGridCoordinate() && mainRoom.tiles[monster->entry->getYGridCoordinate()][monster->entry->getXGridCoordinate()+1]->location.entity == nullptr) {
                         monster->entry->moveInDirection(RIGHT);
                     }
-                    else if (monster->entry->getXGridCoordinate() > player.getXGridCoordinate() && gridMap[monster->entry->getYGridCoordinate()][monster->entry->getXGridCoordinate()-1]->entity == nullptr) {
+                    else if (monster->entry->getXGridCoordinate() > player.getXGridCoordinate() && mainRoom.tiles[monster->entry->getYGridCoordinate()][monster->entry->getXGridCoordinate()-1]->location.entity == nullptr) {
                         monster->entry->moveInDirection(LEFT);
                     }
                 }
                 else {
-                    if (player.getYGridCoordinate() > monster->entry->getYGridCoordinate() && gridMap[monster->entry->getYGridCoordinate()+1][monster->entry->getXGridCoordinate()]->entity == nullptr) {
+                    if (player.getYGridCoordinate() > monster->entry->getYGridCoordinate() && mainRoom.tiles[monster->entry->getYGridCoordinate()+1][monster->entry->getXGridCoordinate()]->location.entity == nullptr) {
                         monster->entry->moveInDirection(DOWN);
                     }
-                    else if (monster->entry->getYGridCoordinate() > player.getYGridCoordinate() && gridMap[monster->entry->getYGridCoordinate()-1][monster->entry->getXGridCoordinate()]->entity == nullptr) {
+                    else if (monster->entry->getYGridCoordinate() > player.getYGridCoordinate() && mainRoom.tiles[monster->entry->getYGridCoordinate()-1][monster->entry->getXGridCoordinate()]->location.entity == nullptr) {
                         monster->entry->moveInDirection(UP);
 
                     }
                 }
             }
+            //Moves in a random direction.
              else {
                 switch (rprand_get_value(0,4)) {
                     case STAY_STILL:
@@ -183,32 +203,20 @@ void checkBotAI() {
 
 }
 
-
-int convertXPosToGrid(Location* pos) {
-    return pos->rectangle.x/standardWidth;
+int convertXPosToGrid(Location pos) {
+    return pos.rectangle.x/standardWidth;
 }
 
-int convertYPosToGrid(Location* pos) {
-    return pos->rectangle.y/standardHeight;
+int convertYPosToGrid(Location pos) {
+    return pos.rectangle.y/standardHeight;
 }
 
+//Checks which entities are on the visible grid.
 void upkeepEntitiesOnVisibleGrid() {
-    /*
-    EntityNode* e = entityManager->head;
-    while (e != nullptr) {
-        e->entry->setVisibleCoordinates();
-        if (e->next == nullptr) {
-            e = entityManager->findIDTree(e->entry->getId());
-            e = e->newID;
-        }
-        else {
-            e = e->next;
-        }
-    }*/
-    for (int i =0; i < visibleGridLocations.size(); i++) {
-        for (int j = 0; j < visibleGridLocations[i].size(); j++) {
-            if (visibleGridLocations[i][j]->entity != nullptr) {
-                visibleGridLocations[i][j]->entity->setVisibleCoordinates(j, i);
+    for (int i =0; i < visibleTiles.size(); i++) {
+        for (int j = 0; j < visibleTiles[i].size(); j++) {
+            if (visibleTiles[i][j]->location.entity != nullptr) {
+                visibleTiles[i][j]->location.entity->setVisibleCoordinates(j, i);
             }
         }
     }

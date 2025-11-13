@@ -39,7 +39,7 @@ bool Location::isEdge() {
     if (rectangle.x == 0 || rectangle.y == 0) {
         return true;
     }
-    if (rectangle.x  == gridMap[0][gridMap.size()-1]->rectangle.x || rectangle.y == gridMap[gridMap.size()-1][0]->rectangle.y) {
+    if (rectangle.x  == mainRoom.tiles[0][mainRoom.tiles.size()-1]->location.rectangle.x || rectangle.y == mainRoom.tiles[mainRoom.tiles.size()-1][0]->location.rectangle.y) {
         return true;
     }
     return false;

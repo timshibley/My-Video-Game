@@ -19,6 +19,8 @@ class Room {
         Room(int l, int h, int e, int i);
         Room();
         void constructGrid();
+        Entity* getEntityAt(int x, int y);
+        void setEntityAt(int x, int y, Entity* e);
 };
 
 

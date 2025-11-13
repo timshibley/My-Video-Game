@@ -44,12 +44,13 @@ inline int walkLeftRightWallCount;
 inline int walkUpDownWallCount;
 inline std::vector<Texture2D> menuTextures;
 inline double attackStartTime = 0.0;
-inline std::vector<std::vector<Location*>> gridMap;
-inline std::vector<std::vector<Location*>> visibleGridLocations;
+//inline std::vector<std::vector<Location*>> gridMap;
+//inline std::vector<std::vector<Location*>> visibleGridLocations;
 inline double startTime;
 inline double frameTime;
 inline double previousFrameTime;
 inline int attackTracker;
 inline Menu mainMenu;
 inline Room mainRoom;
+inline std::vector<std::vector<Tile*>> visibleTiles;
 #endif //MAIN_H

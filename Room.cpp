@@ -28,18 +28,27 @@ void Room::constructGrid(){
     }
     for (int i = 0; i < length; i++) {
         for (int j = 0; j < height; j++) {
-            Location temp;
+            Location tempLocation;
             if (i == 0 ||j == 0 || i == length-1 || j == height-1) {
-                temp =  Location(nullptr, {static_cast<float>(standardWidth*visualScalingFactor*i),static_cast<float>( standardHeight*visualScalingFactor * j), static_cast<float>( standardWidth * visualScalingFactor), static_cast<float>( standardHeight * visualScalingFactor)}, RED);
+                tempLocation=  Location(nullptr, {static_cast<float>(standardWidth*visualScalingFactor*i),static_cast<float>( standardHeight*visualScalingFactor * j), static_cast<float>( standardWidth * visualScalingFactor), static_cast<float>( standardHeight * visualScalingFactor)}, RED);
 
             }
             else {
-                temp =  Location(nullptr, {static_cast<float>(standardWidth * visualScalingFactor * i),static_cast<float>( standardHeight *visualScalingFactor * j), static_cast<float>( standardWidth * visualScalingFactor), static_cast<float>( standardHeight * visualScalingFactor)}, BLUE);
+                tempLocation =  Location(nullptr, {static_cast<float>(standardWidth * visualScalingFactor * i),static_cast<float>( standardHeight *visualScalingFactor * j), static_cast<float>( standardWidth * visualScalingFactor), static_cast<float>( standardHeight * visualScalingFactor)}, BLUE);
 
             }
-            tiles[i][j]->location = temp;
-            tiles[i][j]->id = id;
-            tiles[i][j]->texture = tileTextures[0];
+            Tile* temp= new Tile(tempLocation,tileTextures[0], id);
+            tiles[j][i] = temp;
         }
     }
 }
+
+Entity* Room::getEntityAt(int x, int y) {
+    return tiles[y][x]->location.entity;
+}
+
+void Room::setEntityAt(int x, int y, Entity *e) {
+    tiles[y][x]->location.entity = e;
+}
+
+

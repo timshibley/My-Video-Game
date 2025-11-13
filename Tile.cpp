@@ -9,3 +9,7 @@ Tile::Tile(Location l, Texture2D t, int i) {
     texture = t;
     id = i;
 }
+
+Tile::Tile() {
+
+}

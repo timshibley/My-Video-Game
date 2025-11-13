@@ -16,8 +16,8 @@
 void checkKeys();
 void checkCollisions();
 void checkBotAI();
-int convertXPosToGrid(Location* pos);
-int convertYPosToGrid(Location* pos);
+int convertXPosToGrid(Location pos);
+int convertYPosToGrid(Location pos);
 EntityNode* findEntityNode(Entity e);
 void upkeepEntitiesOnVisibleGrid();
 

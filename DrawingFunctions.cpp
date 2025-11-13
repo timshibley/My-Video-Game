@@ -11,19 +11,19 @@
 //Draws in order of top to bottom. Things on the bottom are drawn over the top things.
 void checkDrawing() {
     ClearBackground(backgroundColor);
-   // Rectangle reference = visibleGridLocations[0][0]->rectangle;
-    for (float i = 0; i < visibleGridLocations.size(); i++) {
-        for (float j = 0; j < visibleGridLocations[i].size(); j++) {
+   // Rectangle reference = visibleTiles[0][0]->rectangle;
+    for (float i = 0; i < visibleTiles.size(); i++) {
+        for (float j = 0; j < visibleTiles[i].size(); j++) {
 
-            DrawRectangleRec({j*(int)(visibleGridLocations[i][j]->rectangle.width)+topLeftCornerXPos, i*(int)(visibleGridLocations[i][j]->rectangle.height)+topLeftCornerYpos, visibleGridLocations[i][j]->rectangle.width, visibleGridLocations[i][j]->rectangle.height}, visibleGridLocations[i][j]->color);
-
-            if (visibleGridLocations[i][j]->entity != nullptr) {
-                if (visibleGridLocations[i][j]->entity->isVisible()) {
-                    DrawTexture(visibleGridLocations[i][j]->entity->getTexture(), j*(int)(visibleGridLocations[i][j]->rectangle.width)+topLeftCornerXPos, i*(int)(visibleGridLocations[i][j]->rectangle.height)+topLeftCornerYpos, WHITE );
+            DrawTexture(visibleTiles[i][j]->texture,j*(int)(visibleTiles[i][j]->location.rectangle.width)+topLeftCornerXPos, i*(int)(visibleTiles[i][j]->location.rectangle.height)+topLeftCornerYpos, WHITE );
+            if (visibleTiles[i][j]->location.entity != nullptr) {
+                if (visibleTiles[i][j]->location.entity->isVisible()) {
+                    DrawTexture(visibleTiles[i][j]->location.entity->getTexture(), j*(int)(visibleTiles[i][j]->location.rectangle.width)+topLeftCornerXPos, i*(int)(visibleTiles[i][j]->location.rectangle.height)+topLeftCornerYpos, WHITE );
                 }
             }
         }
     }
+    //Decides what needs to be drawn.
     if (attackTracker == EXECUTE_FIRE_ATTACK) {
         attackTracker = ANIMATE_FIRE_ATTACK;
         attackStartTime = GetTime();
@@ -41,6 +41,7 @@ void checkDrawing() {
 void drawFireAttack() {
     int playerX = player.getXVisibleCoordinate();
     int playerY = player.getYVisibleCoordinate();
+    //Determines where it should drawn
     switch (player.getLookingDirection()) {
         case UP:
             playerY -= 1;
@@ -57,14 +58,16 @@ void drawFireAttack() {
         default:
             break;
     }
-    DrawTexture(playerAttackTextures[currentFireAttackFrame],playerX*visibleGridLocations[playerY][playerX]->rectangle.width+topLeftCornerXPos, playerY*visibleGridLocations[playerY][playerX]->rectangle.width+topLeftCornerYpos,WHITE);
+    //Draws the fire
+    DrawTexture(playerAttackTextures[currentFireAttackFrame],playerX*visibleTiles[playerY][playerX]->location.rectangle.width+topLeftCornerXPos, playerY*visibleTiles[playerY][playerX]->location.rectangle.width+topLeftCornerYpos,WHITE);
+    //Performs the damage and moves the turn tracker.
     if (GetTime()-attackStartTime > 1) {
         Enemy* temp = player.adjacentEnemy(player.getLookingDirection());
         if (temp != nullptr) {
             temp->setCurrentHP(temp->getCurrentHP() - 5);
             if (temp->getCurrentHP() <= 0) {
                 temp->setVisibility(false);
-                visibleGridLocations[temp->getYVisibleCoordinate()][temp->getXVisibleCoordinate()]->entity = nullptr;
+                visibleTiles[temp->getYVisibleCoordinate()][temp->getXVisibleCoordinate()]->location.entity = nullptr;
                 entityManager->deleteEntity(temp);
             }
         }
@@ -73,8 +76,11 @@ void drawFireAttack() {
     }
 }
 
+//This function changes frames
 void changeFrames() {
     frameTime = GetTime();
+
+    //This updates every single entities frames.
     if (frameTime - previousFrameTime > .2) {
         previousFrameTime = frameTime;
         for (int i = 0; i < entityManager->lengthOfID(MONSTER_ID); i++) {

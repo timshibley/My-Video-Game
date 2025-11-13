@@ -4,6 +4,22 @@
 
 #include "EntityList.h"
 #include "Entity.h"
+/*
+ *This is a picture of what an EntityList object looks like
+ *
+ *  First ID -> Second ID -> Third ID -> ... -> Nth ID
+ *   ||           ||
+ *   \/           \/
+ *  Same ID     Same idea throughout
+ *   ||
+ *   \/
+ *    .
+ *    .
+ *    .
+ *   ||
+ *   \/
+ *   Same ID Nth Object
+ */
 EntityList::EntityList(EntityNode* h)
 {
     head = h;
@@ -13,15 +29,22 @@ EntityList::EntityList() {
 
 }
 
+//This adds a new entity onto the binary tree.
 void EntityList::insertNewEntity(Entity* e) {
     auto* newNode = new EntityNode(e);
     int depth = 0 ;
+
+    //Checks edge case of if the tree is empty
     if (head == nullptr) {
         head = newNode;
         newNode->level = depth;
         return;
     }
+
+    //Determines where the first occurrence of e's ID.
     EntityNode* temp = findIDTree(e->getId());
+
+    //This branch deals with the case that there is at least one occurrence of that ID. Then inserts e at the bottom of the tree
     if (temp == nullptr) {
         temp = head;
         while (temp->newID != nullptr) {
@@ -31,6 +54,8 @@ void EntityList::insertNewEntity(Entity* e) {
         newNode->level = depth;
         newNode->prevID = temp;
     }
+    //This deals with the case that there are no other occurrences of e's ID.
+    //Then it adds it as the next ID branch after the last ID branch.
     else {
         while (temp->next != nullptr) {
             temp = temp->next;
@@ -43,6 +68,7 @@ void EntityList::insertNewEntity(Entity* e) {
     }
 }
 
+//This inserts a new entity using a different constructor but same idea.
 void EntityList::insertNewEntity(float x, float y, float width, float height, int i, int v, Color c, Texture2D t, int k, int xGrid, int yGrid) {
     auto* newNode = new EntityNode(x, y, width, height, i, v, c, t, k, xGrid, yGrid);
     int depth = 0 ;
@@ -74,6 +100,7 @@ void EntityList::insertNewEntity(float x, float y, float width, float height, in
 
 }
 
+//This finds the start of a specific ID Branch
 EntityNode* EntityList::findIDTree(int id) {
     EntityNode* temp = head;
     while (temp != nullptr && temp->entry->getId() != id) {
@@ -82,6 +109,7 @@ EntityNode* EntityList::findIDTree(int id) {
     return temp;
 }
 
+//This deletes the Nth ID Branch
 void EntityList::deleteNthID(int chosenID, int n) {
     EntityNode* temp = findIDTree(chosenID);
     if (temp == nullptr) {
@@ -196,7 +224,7 @@ void EntityList::deleteNthID(int chosenID, int n) {
     }
 }
 
-
+//Determines the length of an ID branch
 int EntityList::lengthOfID(int i ) {
     EntityNode* temp = findIDTree(i);
     int counter = 0;
@@ -211,6 +239,7 @@ int EntityList::lengthOfID(int i ) {
 }
 
 //MAKE SURE TO START N FROM 0
+//Finds the Nth entry of a chosen ID branch
 EntityNode* EntityList::findNthEntry(int chosenID, int n) {
     EntityNode* temp = findIDTree(chosenID);
     if (temp == nullptr) {
@@ -247,7 +276,7 @@ Entity* EntityList::findAtUltimateXY(int x, int y) {
     return (temp->entry);
 }
 
-
+//Deletes a chosen Entity e
 void EntityList::deleteEntity(Entity *e) { //can make more efficient by going to the ID first then going down the list.
     EntityNode* temp = head;
     while (temp != nullptr) {
@@ -265,7 +294,7 @@ void EntityList::deleteEntity(Entity *e) { //can make more efficient by going to
     }
 }
 
-
+//Finds the last node
 EntityNode* EntityList::findLastNode() {
     EntityNode* temp = head;
     if (temp == nullptr) {
@@ -280,6 +309,7 @@ EntityNode* EntityList::findLastNode() {
     return temp;
 }
 
+//This completely clears the EntityList
 void EntityList::deleteAllNodes() {
     EntityNode* temp = findLastNode();
     while (temp != nullptr) {
@@ -288,6 +318,7 @@ void EntityList::deleteAllNodes() {
     }
 }
 
+//Finds an Entity on the visible grid.
 Entity* EntityList::findAtVisibleXY(int x, int y) {
     EntityNode* temp = head;
     //  bool done = false;

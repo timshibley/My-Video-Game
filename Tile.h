@@ -14,6 +14,7 @@ class Tile {
         Texture2D texture;
         int id;
         Tile(Location l, Texture2D t, int i);
+        Tile();
 
 };
 

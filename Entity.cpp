@@ -122,7 +122,7 @@ bool Entity::isTileAdjacent(int direction) {
     bool decision = false;
     switch (direction) {
         case RIGHT:
-            if (xGridCord < gridMap[0].size() -1) {
+            if (xGridCord < mainRoom.tiles[0].size() -1) {
                 decision =  true;
             }
         break;
@@ -137,7 +137,7 @@ bool Entity::isTileAdjacent(int direction) {
             }
         break;
         case DOWN:
-            if (yGridCord < gridMap.size() - 1) {
+            if (yGridCord < mainRoom.tiles.size() - 1) {
                 decision = true;
             }
         break;
@@ -158,22 +158,22 @@ bool Entity::isTileOccupied(int direction, int chosenID) {
         if (chosenID != DONT_CARE_ID) {
                 switch (direction) {
                     case UP:
-                        if (gridMap[yGridCord-1][xGridCord]->entity != nullptr && gridMap[yGridCord-1][xGridCord]->entity->getId() == chosenID) {
+                        if (mainRoom.getEntityAt(xGridCord, yGridCord-1) != nullptr && mainRoom.getEntityAt(xGridCord, yGridCord-1)->getId() == chosenID) {
                             decision = true;
                         }
                         break;
                     case DOWN:
-                        if (gridMap[yGridCord+1][xGridCord]->entity != nullptr && gridMap[yGridCord+1][xGridCord]->entity->getId() == chosenID) {
+                        if (mainRoom.getEntityAt(xGridCord, yGridCord+1) != nullptr && mainRoom.getEntityAt(xGridCord, yGridCord+1)->getId() == chosenID) {
                             decision = true;
                         }
                         break;
                     case RIGHT:
-                        if (gridMap[yGridCord][xGridCord+1]->entity != nullptr && gridMap[yGridCord][xGridCord+1]->entity->getId() == chosenID) {
+                        if (mainRoom.getEntityAt(xGridCord+1, yGridCord)!= nullptr && mainRoom.getEntityAt(xGridCord+1, yGridCord)->getId() == chosenID) {
                             decision = true;
                         }
                         break;
                     case LEFT:
-                        if (gridMap[yGridCord][xGridCord-1]->entity != nullptr && gridMap[yGridCord][xGridCord-1]->entity->getId() == chosenID) {
+                        if (mainRoom.getEntityAt(xGridCord-1, yGridCord) != nullptr && mainRoom.getEntityAt(xGridCord-1, yGridCord)->getId() == chosenID) {
                             decision = true;
                         }
                         break;
@@ -186,22 +186,22 @@ bool Entity::isTileOccupied(int direction, int chosenID) {
         else {
             switch (direction) {
                 case UP:
-                    if (gridMap[yGridCord-1][xGridCord]->entity != nullptr) {
+                    if (mainRoom.getEntityAt(xGridCord, yGridCord-1) != nullptr) {
                         decision = true;
                     }
                     break;
                 case DOWN:
-                    if (gridMap[yGridCord+1][xGridCord]->entity != nullptr) {
+                    if (mainRoom.getEntityAt(xGridCord, yGridCord+1) != nullptr) {
                         decision = true;
                     }
                     break;
                 case RIGHT:
-                    if (gridMap[yGridCord][xGridCord+1]->entity != nullptr) {
+                    if (mainRoom.getEntityAt(xGridCord+1, yGridCord) != nullptr) {
                         decision = true;
                     }
                     break;
                 case LEFT:
-                    if (gridMap[yGridCord][xGridCord-1]->entity != nullptr) {
+                    if (mainRoom.getEntityAt(xGridCord-1, yGridCord) != nullptr) {
                         decision = true;
                     }
                     break;
@@ -225,16 +225,16 @@ Entity* Entity::adjacentEntity(int direction) {
         if (isTileOccupied(direction, DONT_CARE_ID)) {
             switch (direction) {
                 case UP:
-                    pointer = gridMap[yGridCord-1][xGridCord]->entity;
+                    pointer = mainRoom.getEntityAt(xGridCord, yGridCord-1);
                     break;
                 case DOWN:
-                    pointer = gridMap[yGridCord+1][xGridCord]->entity;
+                    pointer = mainRoom.getEntityAt(xGridCord, yGridCord+1);
                     break;
                 case RIGHT:
-                    pointer = gridMap[yGridCord][xGridCord+1]->entity;
+                    pointer = mainRoom.getEntityAt(xGridCord+1, yGridCord);
                     break;
                 case LEFT:
-                    pointer = gridMap[yGridCord][xGridCord-1]->entity;
+                    pointer = mainRoom.getEntityAt(xGridCord-1, yGridCord);
                     break;
                 default:
                     break;
@@ -251,19 +251,19 @@ Enemy* Entity::adjacentEnemy(int direction) {
     if (isTileOccupied(direction, MONSTER_ID)) {
         switch (direction) {
             case UP: {
-                Entity* e = gridMap[yGridCord-1][xGridCord]->entity;
+                Entity* e = mainRoom.getEntityAt(xGridCord, yGridCord-1);
                 return dynamic_cast<Enemy*> (e);
             }
             case DOWN: {
-                Entity* e = gridMap[yGridCord+1][xGridCord]->entity;
+                Entity* e = mainRoom.getEntityAt(xGridCord, yGridCord+1);
                 return dynamic_cast<Enemy*> (e);
             }
             case RIGHT: {
-                Entity* e = gridMap[yGridCord][xGridCord+1]->entity;
+                Entity* e = mainRoom.getEntityAt(xGridCord+1, yGridCord);
                 return dynamic_cast<Enemy*> (e);
             }
             case LEFT: {
-                Entity* e = gridMap[yGridCord][xGridCord-1]->entity;
+                Entity* e = mainRoom.getEntityAt(xGridCord -1 , yGridCord);
                 return dynamic_cast<Enemy*> (e);
             }
             default: break;
@@ -277,24 +277,24 @@ Enemy* Entity::adjacentEnemy(int direction) {
 void Entity::moveInDirection(int dir) {
     switch (dir) {
         case UP:
-            gridMap[yGridCord][xGridCord]->entity = nullptr; //Makes sure to move the entity.
+            mainRoom.setEntityAt(xGridCord, yGridCord, nullptr); //Makes sure to move the entity.
             yGridCord--;
-            gridMap[yGridCord][xGridCord]->entity = this;
+            mainRoom.setEntityAt(xGridCord, yGridCord, this); //Makes sure to move the entity.
             break;
         case DOWN:
-            gridMap[yGridCord][xGridCord]->entity = nullptr;
+            mainRoom.setEntityAt(xGridCord, yGridCord, nullptr); //Makes sure to move the entity.
             yGridCord++;
-            gridMap[yGridCord][xGridCord]->entity = this;
+            mainRoom.setEntityAt(xGridCord, yGridCord, this); //Makes sure to move the entity.
             break;
         case RIGHT:
-            gridMap[yGridCord][xGridCord]->entity = nullptr;
+            mainRoom.setEntityAt(xGridCord, yGridCord, nullptr); //Makes sure to move the entity.
             xGridCord++;
-            gridMap[yGridCord][xGridCord]->entity = this;
+            mainRoom.setEntityAt(xGridCord, yGridCord, this); //Makes sure to move the entity.
             break;
         case LEFT:
-            gridMap[yGridCord][xGridCord]->entity = nullptr;
+            mainRoom.setEntityAt(xGridCord, yGridCord, nullptr); //Makes sure to move the entity.
             xGridCord--;
-            gridMap[yGridCord][xGridCord]->entity = this;
+            mainRoom.setEntityAt(xGridCord, yGridCord, this); //Makes sure to move the entity.
             break;
         default: break;
     }
@@ -307,18 +307,6 @@ void Entity::moveInDirection(int dir) {
 void Entity::setVisibleCoordinates(int tempX, int tempY) {
     xVisibleCord = tempX;
     yVisibleCord = tempY;
-    /*
-    for (int i = 0; i < visibleGridLocations.size(); i++) {
-        for (int j = 0; j < visibleGridLocations[i].size(); j++) {
-            if (visibleGridLocations[i][j]->entity == this) {
-                xVisibleCord = j;
-                yVisibleCord = i;
-                return;
-            }
-        }
-    }
-    xVisibleCord = -1;
-    yVisibleCord = -1;*/
 }
 
 //These are the rectangles around the entity that are actually visible. This is used for collisions with the mouse etc.

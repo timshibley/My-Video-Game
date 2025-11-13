@@ -7,6 +7,7 @@
 #include "Macros.h"
 #include "main.h"
 
+//This loads all the textures.
 int LoadAllTextures() {
     enemyFolderPath = "ImagesforGame/Enemies";
     doorFolderPath = "ImagesforGame/Doors";
@@ -17,6 +18,7 @@ int LoadAllTextures() {
     standardWidth = static_cast<int>(100 * visualScalingFactor);
     standardHeight = static_cast<int>(100 * visualScalingFactor);
     double entityScaler = 0.9;
+    //Goes through each folder and extracts every png file.
     for (const auto& entry : fs::directory_iterator(enemyFolderPath)) {
         if (entry.path().extension() == ".png") {
             Image img = LoadImage(entry.path().string().c_str());
@@ -87,7 +89,7 @@ int LoadAllTextures() {
 }
 
 
-
+//Unloads all of the textures.
 void UnloadAllTextures() {
     for (const auto & doorTexture : doorTextures) {
         UnloadTexture(doorTexture);
@@ -104,9 +106,12 @@ void UnloadAllTextures() {
     for (const auto & menuTexture : menuTextures) {
         UnloadTexture(menuTexture);
     }
+    for (const auto & tileTexture : tileTextures) {
+        UnloadTexture(tileTexture);
+    }
 }
 
-
+//Sets the window up.
 void setupWindow() {
 
     backgroundColor = WHITE;
@@ -122,52 +127,38 @@ void setupWindow() {
     SetTargetFPS(60);
 }
 
+//Initializes trackers.
 void setupTrackers() {
     turnTracker = PLAYERTURN;
     attackTracker = EXECUTE_NOTHING;
 }
 
+
+//Builds the mainRoom Grid and visible grid.
 void setupGrid() {
     mainRoom = Room{30, 30, 0, 0};
-    gridMap.resize(30);
-    for (auto &i : gridMap) {
-        i.resize(30);
-    }
-    visibleGridLocations.resize(9); //This decides how large the visibility is.
-    for (auto &i : visibleGridLocations) {
+    visibleTiles.resize(9);
+    for (auto &i : visibleTiles) {
         i.resize(9);
     }
-
-    for (int i = 0; i < 30; i++) {
-        for (int j = 0; j < 30; j++) {
-            Location* temp;
-            if (i == 0 ||j == 0 || i == 29 || j == 29) {
-                 temp = new Location(nullptr, {static_cast<float>(standardWidth*visualScalingFactor*i),static_cast<float>( standardHeight*visualScalingFactor * j), static_cast<float>( standardWidth * visualScalingFactor), static_cast<float>( standardHeight * visualScalingFactor)}, RED);
-
-            }
-            else {
-                 temp = new Location(nullptr, {static_cast<float>(standardWidth * visualScalingFactor * i),static_cast<float>( standardHeight *visualScalingFactor * j), static_cast<float>( standardWidth * visualScalingFactor), static_cast<float>( standardHeight * visualScalingFactor)}, BLUE);
-
-            }
-            gridMap[j][i] = temp;
-        }
-    }
-    for (int i = 0; i< visibleGridLocations.size(); i++) {
-        for (int j = 0; j< visibleGridLocations[i].size(); j++) {
-            visibleGridLocations[i][j] = gridMap[i][j];
+    for (int i = 0; i< visibleTiles.size(); i++) {
+        for (int j = 0; j< visibleTiles[i].size(); j++) {
+            visibleTiles[i][j] = mainRoom.tiles[i][j];
         }
     }
     float centerXPos = windowWidth / 2;
     float centerYPos = windowHeight / 2;
-
-    topLeftCornerYpos = centerYPos - visibleGridLocations[(visibleGridLocations.size()-1) / 2][(visibleGridLocations[0].size()-1)/2]->rectangle.height *((visibleGridLocations.size()-1)/2.0+.5);
-    topLeftCornerXPos = centerXPos - visibleGridLocations[(visibleGridLocations.size()-1) / 2][(visibleGridLocations[0].size()-1)/2]->rectangle.width *((visibleGridLocations[0].size()-1)/2.0+.5);
+    //Top left corner of the visible grid
+    topLeftCornerYpos = centerYPos - visibleTiles[(visibleTiles.size()-1) / 2][(visibleTiles[0].size()-1)/2]->location.rectangle.height *((visibleTiles.size()-1)/2.0+.5);
+    topLeftCornerXPos = centerXPos - visibleTiles[(visibleTiles.size()-1) / 2][(visibleTiles[0].size()-1)/2]->location.rectangle.width *((visibleTiles[0].size()-1)/2.0+.5);
 }
 
+
+//Initializes the player.
 void setupPlayer() {
     player = {0, 0, static_cast<float>(standardWidth * visualScalingFactor), static_cast<float>( standardHeight * visualScalingFactor), PLAYER_ID, BLACK, playerTextures[MC_RIGHT_TEXTURE], 0, 14,};
-    (gridMap[(visibleGridLocations.size()-1)/2][(visibleGridLocations[0].size()-1)/2]->entity) = &player;
-    player.setXGridCoordinate((visibleGridLocations[0].size()-1)/2);
-    player.setYGridCoordinate((visibleGridLocations.size()-1)/2);
+    (mainRoom.tiles[(visibleTiles.size()-1)/2][(visibleTiles[0].size()-1)/2]->location.entity) = &player;
+    player.setXGridCoordinate((visibleTiles[0].size()-1)/2);
+    player.setYGridCoordinate((visibleTiles.size()-1)/2);
     entityManager->insertNewEntity(&player);
 }
